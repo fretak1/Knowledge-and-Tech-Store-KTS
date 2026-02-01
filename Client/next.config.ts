@@ -1,9 +1,9 @@
 import type { NextConfig } from "next";
 
-const nextConfig: any = { // Using 'any' here is the fastest way to bypass the TS error
-  experimental: {
-    externalDir: true,
-    turbopack: {}, // Try 'turbopack' instead of 'turbo'
+const nextConfig: NextConfig = {
+  // Turbopack is now a top-level property in Next.js 15.3+
+  turbopack: {
+    // You can add resolveAlias or rules here if needed later
   },
 
   images: {
@@ -19,11 +19,10 @@ const nextConfig: any = { // Using 'any' here is the fastest way to bypass the T
     ],
   },
 
-  // If you aren't doing anything special here, 
-  // deleting this block is the best way to stop the error.
-  webpack: (config: any) => {
-    return config;
-  },
+  /* Removed the webpack block entirely. 
+     Next.js will now use Turbopack by default without 
+     throwing the "migration needed" error.
+  */
 };
 
 export default nextConfig;
