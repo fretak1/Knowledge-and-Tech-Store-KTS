@@ -5,7 +5,6 @@ import Image from "next/image";
 import { Trash2, Edit } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useEventStore } from "@/store/useEventStore";
-import AddEvent from "@/components/events/addEvent";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { Skeleton } from "@/components/ui/skeleton";
