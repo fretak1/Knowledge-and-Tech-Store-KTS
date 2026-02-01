@@ -1,11 +1,11 @@
 import type { NextConfig } from "next";
 
-const nextConfig: NextConfig = {
+// Use type assertion to allow unknown experimental properties
+const nextConfig: NextConfig & { experimental?: any } = {
   experimental: {
     externalDir: true, // keep if needed
+    turbo: false,       // force Webpack build on Vercel
   },
-
-  // turbopack: {}, // Removed to fix crash with React 19
 
   images: {
     remotePatterns: [
@@ -19,6 +19,7 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+
   webpack: (config) => {
     return config;
   },
