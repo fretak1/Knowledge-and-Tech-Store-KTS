@@ -1,0 +1,5 @@
+node_modules/
+Server/node_modules/
+.next/
+Server/uploads/
+.env
