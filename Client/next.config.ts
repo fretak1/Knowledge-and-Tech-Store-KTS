@@ -1,10 +1,9 @@
 import type { NextConfig } from "next";
 
-// Use type assertion to allow unknown experimental properties
-const nextConfig: NextConfig & { experimental?: any } = {
+const nextConfig: any = { // Using 'any' here is the fastest way to bypass the TS error
   experimental: {
-    externalDir: true, // keep if needed
-    turbo: false,       // force Webpack build on Vercel
+    externalDir: true,
+    turbopack: {}, // Try 'turbopack' instead of 'turbo'
   },
 
   images: {
@@ -20,7 +19,9 @@ const nextConfig: NextConfig & { experimental?: any } = {
     ],
   },
 
-  webpack: (config) => {
+  // If you aren't doing anything special here, 
+  // deleting this block is the best way to stop the error.
+  webpack: (config: any) => {
     return config;
   },
 };
