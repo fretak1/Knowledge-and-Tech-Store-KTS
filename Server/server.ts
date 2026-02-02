@@ -55,6 +55,13 @@ app.options("*", cors(corsOptions));
 app.use(express.json());
 app.use(cookieParser());
 
+app.use((req, res, next) => {
+  console.log('Incoming request URL:', req.url);
+  console.log('Request method:', req.method);
+  console.log('Request origin:', req.headers.origin);
+  next();
+});
+
 // ✅ Mount Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
