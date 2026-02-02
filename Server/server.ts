@@ -6,13 +6,11 @@ import { prisma } from './db';
 
 // Routes
 import authRoutes from './routes/authRoutes';
-import serviceRoutes from './routes/serviceRoutes';
 import userRoutes from './routes/userRoutes';
 import eventRoutes from './routes/eventRoutes';
 import guideRoutes from './routes/guideRoutes';
 import taskRoutes from './routes/tasksRoutes';
 import blogRoutes from './routes/blogRoutes';
-import analysisRoutes from './routes/analysisRoutes';
 import messageRoutes from './routes/messageRoutes';
 import notificationRoutes from './routes/notificationRoutes';
 import applicationRoutes from './routes/applicationRoutes';
@@ -33,14 +31,12 @@ app.use(cookieParser());
 
 // Mount Routes
 app.use('/api/auth', authRoutes);
-app.use('/api/services', serviceRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/events', eventRoutes);
 app.use('/api/guides', guideRoutes);
 app.use('/api/tasks', taskRoutes);
 app.use('/api/user', userRoutes);
 app.use('/api/blogs', blogRoutes);
-app.use('/api/analysis', analysisRoutes);
 app.use('/api/messages', messageRoutes);
 app.use('/api/notifications', notificationRoutes);
 app.use('/api/applications', applicationRoutes);
