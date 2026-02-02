@@ -21,20 +21,23 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 4000;
 
+// ✅ Allowed Origins
 const allowedOrigins = [
   "https://knowledge-and-tech-store-kts.vercel.app",
   "http://localhost:3000"
 ];
 
+// ✅ CORS Options
 const corsOptions = {
-  origin: function (origin, callback) {
-    // allow requests with no origin (like Postman or server-to-server)
+  origin: function (origin: any, callback: any) {
+    console.log("Incoming request origin:", origin);
+    // allow requests with no origin (like Postman, server-to-server)
     if (!origin) return callback(null, true);
 
     if (allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
-      callback(new Error("Not allowed by CORS"));
+      callback(new Error(`Not allowed by CORS: ${origin}`));
     }
   },
   credentials: true,
@@ -42,13 +45,17 @@ const corsOptions = {
   allowedHeaders: ["Content-Type", "Authorization"]
 };
 
+// ✅ Use CORS middleware BEFORE anything else
 app.use(cors(corsOptions));
+
+// ✅ Preflight requests
 app.options("*", cors(corsOptions));
 
+// ✅ Body parsing
 app.use(express.json());
 app.use(cookieParser());
 
-// Mount Routes
+// ✅ Mount Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/events', eventRoutes);
@@ -61,13 +68,12 @@ app.use('/api/notifications', notificationRoutes);
 app.use('/api/applications', applicationRoutes);
 app.use('/api/shifts', shiftRoutes);
 
-
-// Health check route
+// ✅ Health check route
 app.get('/health', (req: Request, res: Response) => {
     res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
 
-// Database connection test
+// ✅ Database connection test
 app.get('/db-check', async (req: Request, res: Response) => {
     try {
         const userCount = await prisma.user.count();
@@ -78,7 +84,7 @@ app.get('/db-check', async (req: Request, res: Response) => {
     }
 });
 
-// Server start
+// ✅ Start Server
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
 });
