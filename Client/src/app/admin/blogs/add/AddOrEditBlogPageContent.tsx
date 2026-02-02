@@ -21,7 +21,6 @@ import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { useBlogsStore } from "@/store/useBlogsStore";
 
-export const dynamic = 'force-dynamic';
 
 
 export default function AddOrEditBlogPage() {
