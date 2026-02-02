@@ -21,18 +21,30 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 4000;
 
-// Middleware
+const allowedOrigins = [
+  "https://knowledge-and-tech-store-kts.vercel.app",
+  "http://localhost:3000"
+];
+
 const corsOptions = {
-  origin: [
-      "https://knowledge-and-tech-store-kts.vercel.app", 
-      "http://localhost:3000" 
-    ],
+  origin: function (origin, callback) {
+    // allow requests with no origin (like Postman or server-to-server)
+    if (!origin) return callback(null, true);
+
+    if (allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
   credentials: true,
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization"],
+  allowedHeaders: ["Content-Type", "Authorization"]
 };
 
 app.use(cors(corsOptions));
+app.options("*", cors(corsOptions));
+
 app.use(express.json());
 app.use(cookieParser());
 
