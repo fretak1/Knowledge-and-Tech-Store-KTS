@@ -22,10 +22,15 @@ const app = express();
 const PORT = process.env.PORT || 4000;
 
 // Middleware
-app.use(cors({
-    origin: 'http://localhost:3000', // Allow Client
-    credentials: true,
-}));
+const corsOptions = {
+  origin: [
+      "https://knowledge-and-tech-store-kts.vercel.app", 
+      "http://localhost:3000" 
+    ],
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+};
 app.use(express.json());
 app.use(cookieParser());
 
