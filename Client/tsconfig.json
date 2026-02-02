@@ -1,11 +1,7 @@
 {
   "compilerOptions": {
     "target": "ES2017",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
+    "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
@@ -17,49 +13,29 @@
     "isolatedModules": true,
     "jsx": "react-jsx",
     "incremental": true,
+
+    "baseUrl": "src",
+    "paths": {
+      "@/*": ["*"]
+    },
+
     "plugins": [
       {
         "name": "next"
       }
-    ],
-    "paths": {
-      "@/*": [
-        "./src/*"
-      ],
-      "@client/*": [
-        "./*"
-      ],
-      "@server/*": [
-        "../Server/*"
-      ],
-      "next-auth": [
-        "./node_modules/next-auth"
-      ],
-      "next-auth/*": [
-        "./node_modules/next-auth/*"
-      ],
-      "zod": [
-        "./node_modules/zod"
-      ],
-      "bcryptjs": [
-        "./node_modules/bcryptjs"
-      ],
-      "@prisma/client": [
-        "../Server/node_modules/@prisma/client"
-      ]
-    }
+    ]
   },
+
   "include": [
     "next-env.d.ts",
-    "**/*.ts",
-    "**/*.tsx",
+    "src/**/*.ts",
+    "src/**/*.tsx",
     ".next/types/**/*.ts",
-    ".next/dev/types/**/*.ts",
-    "**/*.mts",
-    "../Server/**/*.ts",
-    "../Server/**/*.tsx"
+    ".next/dev/types/**/*.ts"
   ],
+
   "exclude": [
+    "../Server",
     "node_modules"
   ]
 }
