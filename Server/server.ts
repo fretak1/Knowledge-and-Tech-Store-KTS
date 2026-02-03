@@ -21,35 +21,38 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 4000;
 
-// ✅ Allowed Origins
 const allowedOrigins = [
   "https://knowledge-and-tech-store-kts.vercel.app",
-  "http://localhost:3000"
+  "http://localhost:3000",
 ];
 
-// ✅ CORS Options
-const corsOptions = {
-  origin: function (origin: any, callback: any) {
-    console.log("Incoming request origin:", origin);
-    // allow requests with no origin (like Postman, server-to-server)
-    if (!origin) return callback(null, true);
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      console.log("CORS origin:", origin);
 
-    if (allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error(`Not allowed by CORS: ${origin}`));
-    }
-  },
-  credentials: true,
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization"]
-};
+      // Allow non-browser clients (Postman, Render health checks)
+      if (!origin) return callback(null, true);
 
-// ✅ Use CORS middleware BEFORE anything else
-app.use(cors(corsOptions));
+      if (allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      }
 
-// ✅ Preflight requests
-app.options("*", cors(corsOptions));
+      // IMPORTANT: don't throw error
+      return callback(null, false);
+    },
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: [
+      "Content-Type",
+      "Authorization",
+    ],
+  })
+);
+
+// Preflight
+app.options("*", cors());
+
 
 // ✅ Body parsing
 app.use(express.json());
