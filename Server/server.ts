@@ -26,33 +26,22 @@ const allowedOrigins = [
   "http://localhost:3000",
 ];
 
-app.use(
-  cors({
-    origin: (origin, callback) => {
-      console.log("CORS origin:", origin);
+app.use(cors({
+  origin: (origin, callback) => {
+    console.log("CORS check for:", origin);
 
-      // Allow non-browser clients (Postman, Render health checks)
-      if (!origin) return callback(null, true);
+    if (!origin) {
+      return callback(null, true);
+    }
 
-      if (allowedOrigins.includes(origin)) {
-        return callback(null, true);
-      }
+    if (allowedOrigins.includes(origin)) {
+      return callback(null, origin);
+    }
 
-      // IMPORTANT: don't throw error
-      return callback(null, false);
-    },
-    credentials: true,
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    allowedHeaders: [
-      "Content-Type",
-      "Authorization",
-    ],
-  })
-);
-
-// Preflight
-app.options("*", cors());
-
+    return callback(null, false);
+  },
+  credentials: true,
+}));
 
 // ✅ Body parsing
 app.use(express.json());
