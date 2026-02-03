@@ -21,27 +21,27 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 4000;
 
-const allowedOrigins = [
-  "https://knowledge-and-tech-store-kts.vercel.app",
-  "http://localhost:3000",
-];
-
 app.use(cors({
   origin: (origin, callback) => {
     console.log("CORS check for:", origin);
 
-    if (!origin) {
-      return callback(null, true);
-    }
+    // Allow server-to-server / Postman
+    if (!origin) return callback(null, true);
+
+    const allowedOrigins = [
+      "https://knowledge-and-tech-store-kts.vercel.app",
+      "http://localhost:3000",
+    ];
 
     if (allowedOrigins.includes(origin)) {
-      return callback(null, origin);
+      return callback(null, true); // ✅ MUST be true
     }
 
-    return callback(null, false);
+    return callback(new Error("Not allowed by CORS"));
   },
   credentials: true,
 }));
+
 
 // ✅ Body parsing
 app.use(express.json());
