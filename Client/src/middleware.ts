@@ -6,6 +6,9 @@ export async function middleware(request: NextRequest) {
     const accessToken = request.cookies.get('accessToken')?.value;
     const { pathname } = request.nextUrl;
 
+    console.log('Middleware accessToken:', accessToken);
+
+
     // Public paths that don't need auth
     const isAuthPath = pathname === '/login'        
 
