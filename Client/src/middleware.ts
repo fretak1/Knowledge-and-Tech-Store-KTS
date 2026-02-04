@@ -27,14 +27,7 @@ export async function middleware(request: NextRequest) {
         userRole = payload.role as string;
     }
 
-    if (!accessToken) {
-        if (pathname.startsWith('/admin') ||
-            (pathname.startsWith('/members') && pathname !== '/members/memberList') ||
-            pathname.startsWith('/student')) {
-            console.log("No token, redirecting to /login");
-            return NextResponse.redirect(new URL('/login', request.url));
-        }
-    }
+    
 
     if (accessToken && isAuthPath) {
         return NextResponse.redirect(new URL('/', request.url));
