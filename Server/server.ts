@@ -21,31 +21,26 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 4000;
 
-app.use(cors({
-  origin: (origin, callback) => {
-    console.log("CORS check for:", origin);
-
-    // Allow server-to-server / Postman
-    if (!origin) return callback(null, true);
-
-    const allowedOrigins = [
-      "https://knowledge-and-tech-store-kts.vercel.app",
-      "http://localhost:3000",
-    ];
-
-    if (allowedOrigins.includes(origin)) {
-      return callback(null, true); // ✅ MUST be true
-    }
-
-    return callback(new Error("Not allowed by CORS"));
-  },
-  credentials: true,
-}));
 
 
 // ✅ Body parsing
 app.use(express.json());
 app.use(cookieParser());
+
+app.use(
+  cors({
+    origin: 'http://localhost:5173',
+    methods: ['GET','POST','DELETE','PUT'],
+    allowedHeaders: [
+      "Content-Type",
+      "Authorization",
+      "Cache-Control",
+      "Expires",  
+      "Pragma"
+    ],
+    credentials: true
+  })
+);
 
 app.use((req, res, next) => {
   console.log('Incoming request URL:', req.url);
