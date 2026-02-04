@@ -1,62 +1,49 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
-import { jwtVerify } from 'jose';
 
-export async function middleware(request: NextRequest) {
-    const accessToken = request.cookies.get('accessToken')?.value;
-    const { pathname } = request.nextUrl;
+export function middleware(request: NextRequest) {
+  const { pathname } = request.nextUrl;
 
-    // Public paths that don't need auth
-    const isAuthPath = pathname === '/login'        
+  /**
+   * PUBLIC ROUTES
+   * Anyone can access these
+   */
+  const publicRoutes = ['/login'];
 
-    let userRole: string | null = null;
+  const isPublicRoute = publicRoutes.includes(pathname);
 
-    if (accessToken) {
-        const jwtSecret = process.env.JWT_SECRET;
+  /**
+   * PROTECTED ROUTES
+   * We do NOT check roles or cookies here
+   * Real auth is handled by the backend (/me)
+   */
+  const protectedPrefixes = ['/admin', '/members', '/student'];
 
-        if (!jwtSecret || jwtSecret.length === 0) {
-            console.error("CRITICAL: JWT_SECRET is missing or empty in middleware!");
-            return NextResponse.redirect(new URL('/login', request.url));
-        }
+  const isProtectedRoute = protectedPrefixes.some(prefix =>
+    pathname.startsWith(prefix)
+  );
 
-        const secret = new TextEncoder().encode(jwtSecret);
-        const { payload } = await jwtVerify(accessToken, secret);
-        userRole = payload.role as string;
-    }
-
-    if (!accessToken) {
-        if (pathname.startsWith('/admin') ||
-            (pathname.startsWith('/members') && pathname !== '/members/memberList') ||
-            pathname.startsWith('/student')) {
-            console.log("No token, redirecting to /login");
-            return NextResponse.redirect(new URL('/login', request.url));
-        }
-    }
-
-    if (accessToken && isAuthPath) {
-        return NextResponse.redirect(new URL('/', request.url));
-    }
-
-    if (accessToken && userRole) {
-        if (pathname.startsWith('/admin') && userRole !== 'ADMIN') {
-            return NextResponse.redirect(new URL('/', request.url));
-        }
-
-        if (pathname.startsWith('/members') &&
-            pathname !== '/members/memberList' &&
-            userRole !== 'MEMBER' &&
-            userRole !== 'ADMIN') {
-            return NextResponse.redirect(new URL('/', request.url));
-        }
-
-        if (pathname.startsWith('/student') && userRole !== 'STUDENT') {
-            return NextResponse.redirect(new URL('/', request.url));
-        }
-    }
-
+  /**
+   * If user tries to access protected routes,
+   * allow navigation and let the page itself
+   * validate auth via backend API.
+   */
+  if (isProtectedRoute) {
     return NextResponse.next();
+  }
+
+  /**
+   * Prevent logged-in users from visiting /login
+   * (OPTIONAL — only if you store a frontend cookie later)
+   * For now, allow it.
+   */
+  if (isPublicRoute) {
+    return NextResponse.next();
+  }
+
+  return NextResponse.next();
 }
 
 export const config = {
-    matcher: ['/((?!api|_next/static|_next/image|.*\\.png$).*)'],
+  matcher: ['/((?!api|_next/static|_next/image|.*\\.png$).*)'],
 };
