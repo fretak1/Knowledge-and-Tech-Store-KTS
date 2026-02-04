@@ -34,13 +34,13 @@ export const login = async (req: Request, res: Response) => {
             { expiresIn: '60m' }
         );
 
-        // Set Cookie
-        res.cookie('accessToken', accessToken, {
-            httpOnly: true,
-            secure: process.env.NODE_ENV === 'production',
-            sameSite: 'strict',
-            maxAge: 60 * 60 * 1000, // 60 minitus
-        });
+      res.cookie('accessToken', accessToken, {
+  httpOnly: true,
+  secure: true,        // MUST be true
+  sameSite: 'none',    // MUST be 'none' for cross-site
+  maxAge: 60 * 60 * 1000,
+});
+
 
         res.json({
             user: {

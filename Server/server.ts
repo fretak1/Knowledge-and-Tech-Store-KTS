@@ -21,15 +21,35 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 4000;
 
-// Middleware
-app.use(cors({
-    origin: 'http://localhost:3000', // Allow Client
-    credentials: true,
-}));
+
+
+// ✅ Body parsing
 app.use(express.json());
 app.use(cookieParser());
 
-// Mount Routes
+app.use(
+  cors({
+    origin: 'http://localhost:5173',
+    methods: ['GET','POST','DELETE','PUT'],
+    allowedHeaders: [
+      "Content-Type",
+      "Authorization",
+      "Cache-Control",
+      "Expires",  
+      "Pragma"
+    ],
+    credentials: true
+  })
+);
+
+app.use((req, res, next) => {
+  console.log('Incoming request URL:', req.url);
+  console.log('Request method:', req.method);
+  console.log('Request origin:', req.headers.origin);
+  next();
+});
+
+// ✅ Mount Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/events', eventRoutes);
@@ -42,13 +62,12 @@ app.use('/api/notifications', notificationRoutes);
 app.use('/api/applications', applicationRoutes);
 app.use('/api/shifts', shiftRoutes);
 
-
-// Health check route
+// ✅ Health check route
 app.get('/health', (req: Request, res: Response) => {
     res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
 
-// Database connection test
+// ✅ Database connection test
 app.get('/db-check', async (req: Request, res: Response) => {
     try {
         const userCount = await prisma.user.count();
@@ -59,7 +78,7 @@ app.get('/db-check', async (req: Request, res: Response) => {
     }
 });
 
-// Server start
+// ✅ Start Server
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
 });
