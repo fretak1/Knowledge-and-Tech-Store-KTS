@@ -29,7 +29,7 @@ app.use(cookieParser());
 
 app.use(
   cors({
-    origin: 'http://localhost:5173',
+    origin: 'https://knowledge-and-tech-store-kts.vercel.app',
     methods: ['GET','POST','DELETE','PUT'],
     allowedHeaders: [
       "Content-Type",
