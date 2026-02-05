@@ -30,7 +30,7 @@ app.use(cookieParser());
 app.use(
   cors({
     origin: 'https://knowledge-and-tech-store-kts.vercel.app',
-    methods: ['GET','POST','DELETE','PUT'],
+    methods: ['GET','POST','DELETE','PUT','PATCH'],
     allowedHeaders: [
       "Content-Type",
       "Authorization",
